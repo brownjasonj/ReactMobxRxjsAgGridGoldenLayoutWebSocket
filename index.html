@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="//golden-layout.com/assets/js/goldenlayout.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="//golden-layout.com/assets/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet" href="//golden-layout.com/assets/css/goldenlayout-dark-theme.css" />
+    <script src="node_modules/react/dist/react.js"></script>
+ 
+    <script src="node_modules/react-dom/dist/react-dom.js"></script>
+    <script src="node_modules/rx-http-request/browser.js" type="application/javascript"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+    <link type="text/css" href='node_modules/ag-grid/dist/styles/ag-grid.css' rel="stylesheet"/>
+    <link type="text/css" href='node_modules/ag-grid/dist/styles/theme-fresh.css' rel="stylesheet"/>
+    <meta charset="UTF-8">
+    <title>My Typescript App</title>
+  </head>
+<style>
+        button {
+            margin-left: 4px;
+            margin-right: 4px;
+        }
+
+        .customHeaderMenuButton{
+            margin-top: 5px;
+            margin-left: 4px;
+            float: left;
+        }
+
+        .customHeaderLabel{
+            margin-left: 5px;
+            margin-top: 3px;
+            float: left;
+        }
+
+        .customSortDownLabel{
+            float: left;
+            margin-left: 10px;
+            margin-top: 5px;
+        }
+
+        .customSortUpLabel{
+            float: left;
+            margin-left: 3px;
+            margin-top: 4px;
+        }
+
+        .customSortRemoveLabel{
+            float: left;
+            font-size: 11px;
+            margin-left: 3px;
+            margin-top: 6px;
+        }
+
+        .active {
+            color: cornflowerblue;
+        }
+
+        .hidden { display:none; }
+
+
+        .customHeaderLabel{
+            margin-left: 5px;
+            margin-top: 3px;
+            float: left;
+        }
+
+        .customExpandButton{
+            float:right;
+            margin-top: 5px;
+            margin-left: 3px;
+        }
+
+        .expanded {
+            animation-name: toExpanded;
+            animation-duration: 1s;
+            -ms-transform: rotate(180deg); /* IE 9 */
+            -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+            transform: rotate(180deg);
+        }
+
+        .collapsed {
+            color: cornflowerblue;
+            animation-name: toCollapsed;
+            animation-duration: 1s;
+            -ms-transform: rotate(0deg); /* IE 9 */
+            -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+            transform: rotate(0deg);
+        }
+
+
+
+        @keyframes  toExpanded{
+            from {
+                color: cornflowerblue;
+                -ms-transform: rotate(0deg); /* IE 9 */
+                -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+                transform: rotate(0deg);
+            }
+            to {
+                color: black;
+                -ms-transform: rotate(180deg); /* IE 9 */
+                -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+                transform: rotate(180deg);
+            }
+        }
+
+        @keyframes toCollapsed{
+            from {
+                color: black;
+                -ms-transform: rotate(180deg); /* IE 9 */
+                -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+                transform: rotate(180deg);
+            }
+            to {
+                color: cornflowerblue;
+                -ms-transform: rotate(0deg); /* IE 9 */
+                -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+                transform: rotate(0deg);
+            }
+        }
+    </style>
+  <body>
+    <!-- this is where our Hello component will get rendered into -->
+    <div id="app"></div>
+
+    <script src="build/bundle.js"></script>
+  </body>
+</html>
