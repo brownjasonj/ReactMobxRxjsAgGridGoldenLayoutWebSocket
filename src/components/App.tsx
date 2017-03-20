@@ -12,6 +12,10 @@ import { CityWeatherGrid } from './cityweather-grid.component';
 import { NavBar } from './navbar.component';
 import { GoogleMap } from './google-map.component';
 
+import { StockTicker } from './stock-ticker.component';
+import { stockTickerState } from '../state/stock-ticker.state';
+import { StockTickerGrid } from './stock-ticker-grid.component';
+
 interface Props {
     store : WeatherState ;
 };
@@ -78,6 +82,8 @@ class App extends React.Component<any, {}> {
                 <NavBar weatherState = {this.props.store} />
                 <CityWeatherGrid weatherState = {this.props.store} />
                 <GoogleMap weatherState = {this.props.store} />
+                <StockTickerGrid stocks={stockTickerState}/>
+                <StockTicker stocks={stockTickerState}/>
             </div>
         );
     }
