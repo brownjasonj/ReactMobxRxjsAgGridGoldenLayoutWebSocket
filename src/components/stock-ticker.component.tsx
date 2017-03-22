@@ -10,12 +10,11 @@ interface Props {
 @observer
 class StockTicker extends React.Component<Props, {}> {
     private uri: string = "ws://localhost:9003/staticservices/websocket/stock";
-    private initialOpen:boolean;
 
     populateStocks(stocks: string[]) {
-        stocks.forEach((stock) => {
+        stocks.forEach((stockSymbol) => {
             this.props.stocks.update({
-                symbol: stock,
+                symbol: stockSymbol,
                 description: "",
                 value: 0.0,
                 lastUpdate: 0
@@ -26,19 +25,19 @@ class StockTicker extends React.Component<Props, {}> {
     onSocketEvent(evt: MessageEvent) {
         var received_msg = evt.data;
         var jsonData = JSON.parse(received_msg);
-        console.log("Message is received..." + received_msg);
-        if (this.initialOpen) {
-            this.initialOpen = false;
+        // console.log("Message received..." + received_msg);
+        if (jsonData.hasOwnProperty('stocks')) {
+            console.log("Initial population of stocks " + received_msg);
             this.populateStocks(jsonData.stocks);
         }
         else {
-            this.props.stocks.update(JSON.parse(received_msg));
+            var stock: Stock = jsonData;
+            this.props.stocks.update(stock);
         }
     }
 
     constructor(props: Props) {
         super(props);
-        this.initialOpen = true;
         if ("WebSocket" in window)
         {
             console.log("WebSocket is supported by your Browser!");
@@ -53,7 +52,7 @@ class StockTicker extends React.Component<Props, {}> {
                 console.log("Message is sent...");
             };
             
-            ws.onmessage = (evt) => this.onSocketEvent(evt);
+            ws.onmessage = this.onSocketEvent.bind(this);
             
             ws.onclose = function()
             { 

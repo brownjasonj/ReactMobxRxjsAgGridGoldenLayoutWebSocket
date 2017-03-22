@@ -5,13 +5,12 @@ import { AgGridReact } from 'ag-grid-react';
 
 import { HeaderComponent } from './header.component';
 
-import { StockTickerState, Stock } from '../state/stock-ticker.state';
+import { StockTickerState, Stock, StockValue, StockDetails } from '../state/stock-ticker.state';
 
 interface Props {
     stocks: StockTickerState;
 }
 
-@observer
 class StockTickerGrid extends React.Component<Props, {}> {
     private columnDefs: any[] = [
         {
@@ -52,33 +51,72 @@ class StockTickerGrid extends React.Component<Props, {}> {
     private _api: any;
     private _columnApi: any;
 
-    onStockDetailChange(changes: any) {
-        console.log("Grid onStockDetailChange" + changes);
-        this.props.stocks.update({symbol: changes.symbol,
-                                    description: changes.description,
-                                    value: changes.value,
-                                    lastUpdate: changes.lastUpdate});
-        
-        console.log("Stocks " + this.props.stocks);
-        this._gridOptions.api.refreshView();
-    }
+    onStockDetailChange(change: any) {
+        var symbol:string = change.name;
+        var stockDetail:StockDetails = change.newValue;
+        console.log("Grid onStockDetailChange " + JSON.stringify(stockDetail));
 
-    onStockValueChange(changes: any) {
-        console.log("Grid onStockValueChange" + changes);
         // at the end of the update below, this array will
         // have all of the items that we updated
         var updatedNodes:any[] = [];
         // look for all the 'Jillian' nodes
         this._gridOptions.api.forEachNode((node:any) => {
             var data = node.data;
-            if (data.symbol == changes.symbol) {
-                console.log("Value changed: " + changes.symbol + " to " + changes.value);
-                data.value = changes.value;
+            if (data.symbol == stockDetail.symbol) {
+                console.log("Symbol change: " + stockDetail.symbol);
+                data.symbol = stockDetail.symbol
+                data.description = stockDetail.description;
                 updatedNodes.push(node);
             }
         });
         // now tell the grid it needs refresh all these rows
-        this._gridOptions.api.refreshCells(updatedNodes, ['value']);
+        //this._gridOptions.api.refreshCells(updatedNodes, ['value']);
+        console.log("Nodes being updated " + updatedNodes);
+
+        if (updatedNodes.length == 0) {
+            // length 0 means the symbol is not in the grid, so it needs to be added
+            var stockDetail:StockDetails = this.props.stocks.getStockDetails().get(symbol);
+            var stock:Stock = {symbol: symbol, description: stockDetail.description, value: 0.0, lastUpdate: 0};
+            console.log("Added new row to grid " + JSON.stringify(stock));
+            this._gridOptions.api.addItems([stock]);
+            this._gridOptions.api.refreshRows([stock]);
+        }
+        else {
+            this._gridOptions.api.refreshCells(updatedNodes, ['symbol', 'description']);
+        }
+    }
+
+    onStockValueChange(change: any) {
+        var symbol: string = change.name;
+        var stockValue:StockValue = change.newValue;
+
+        console.log("Grid onStockValueChange symbol " + symbol + " value " + JSON.stringify(stockValue))
+
+        // at the end of the update below, this array will
+        // have all of the items that we updated
+        var updatedNodes:any[] = [];
+        // look for all the 'Jillian' nodes
+        this._gridOptions.api.forEachNode((node:any) => {
+            var data = node.data;
+            if (data.symbol == symbol) {
+                data.value = stockValue.value;
+                data.lastUpdate = stockValue.lastUpdate;
+                updatedNodes.push(node);
+            }
+        });
+
+        if (updatedNodes.length == 0) {
+            // length 0 means the symbol is not in the grid, so it needs to be added
+            var stockDetail:StockDetails = this.props.stocks.getStockDetails().get(symbol);
+            var stock:Stock = {symbol: symbol, description: stockDetail.description, value: stockValue.value, lastUpdate: stockValue.lastUpdate};
+            console.log("Added new row to grid " + JSON.stringify(stock));
+            this._gridOptions.api.addItems([stock]);
+            this._gridOptions.api.refreshRows([stock]);
+        }
+        else {
+            // now tell the grid it needs refresh all these rows
+            this._gridOptions.api.refreshCells(updatedNodes, ['value', 'lastUpdate']);
+        }
     }
 
     constructor(props: Props) {
@@ -112,8 +150,8 @@ class StockTickerGrid extends React.Component<Props, {}> {
             rowBuffer: 10 // no need to set this, the default is fine for almost all scenarios
         };
 
-        this.props.stocks.addDetailsObserver((a:any) => this.onStockDetailChange.bind(a));
-        this.props.stocks.addValueChangeObserver((a:any) => this.onStockValueChange.bind(a));
+        this.props.stocks.addDetailsObserver(this.onStockDetailChange.bind(this));
+        this.props.stocks.addValueChangeObserver(this.onStockValueChange.bind(this));
 
     }
 
@@ -123,12 +161,19 @@ class StockTickerGrid extends React.Component<Props, {}> {
         
         const stockList: Stock[] = [];
         
-        stockDetails.forEach((value, key, object) => {
+        stockValues.forEach((value, key, object) => {
+            console.log("StockList value " + value);
+            console.log("StockList key " + key);
+            console.log("StockList object " + object);
+            console.log("StockList symbols " + stockDetails.keys());
+            var stockValue:StockValue = stockValues.get(key);
+            console.log("StockList StockValue " + stockValue);
+            
             stockList.concat({
-                'symbol': value.symbol,
-                'description': value.description,
-                'value': stockValues.get(key).value,
-                'lastUpdate': stockValues.get(key).lastUpdate
+                'symbol': stockDetails.get(key).symbol,
+                'description': stockDetails.get(key).description,
+                'value': value.value,
+                'lastUpdate': value.lastUpdate
             });
         });
 

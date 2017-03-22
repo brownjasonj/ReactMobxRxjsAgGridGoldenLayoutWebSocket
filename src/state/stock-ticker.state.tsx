@@ -46,16 +46,10 @@ class StockTickerState {
     }
 
     update(stock: Stock) {
-        console.log("Updating :" + stock);
-
-        console.log("Stock symbol = " + stock.symbol);
-
         if (this.stockDetails.has(stock.symbol)) {
-            console.log("Updating value");
             this.stockValues.set(stock.symbol, new StockValue(stock.value, stock.lastUpdate));
         }
         else {
-            console.log("New Symbol");
             this.stockDetails.set(stock.symbol, new StockDetails(stock.symbol, stock.description));
             this.stockValues.set(stock.symbol, new StockValue(stock.value, stock.lastUpdate));
         }
