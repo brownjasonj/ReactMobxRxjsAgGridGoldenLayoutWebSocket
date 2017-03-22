@@ -9,7 +9,7 @@ interface Props {
 
 @observer
 class StockTicker extends React.Component<Props, {}> {
-    private uri: string = "ws://localhost:9003/staticservices/websocket/stock";
+    private uri: string = "ws://localhost:8025/websockets/stock";
 
     populateStocks(stocks: string[]) {
         stocks.forEach((stockSymbol) => {
@@ -43,7 +43,7 @@ class StockTicker extends React.Component<Props, {}> {
             console.log("WebSocket is supported by your Browser!");
             
             // Let us open a web socket
-            var ws = new WebSocket("ws://localhost:8025/websockets/stock");
+            var ws = new WebSocket(this.uri);
             
             ws.onopen = function()
             {
