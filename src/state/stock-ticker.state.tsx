@@ -47,6 +47,9 @@ class StockTickerState {
 
     update(stock: Stock) {
         if (this.stockDetails.has(stock.symbol)) {
+            if (this.stockDetails.get(stock.symbol).description != stock.description) {
+                this.stockDetails.set(stock.symbol, new StockDetails(stock.symbol, stock.description));
+            }
             this.stockValues.set(stock.symbol, new StockValue(stock.value, stock.lastUpdate));
         }
         else {
