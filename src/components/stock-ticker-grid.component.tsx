@@ -14,7 +14,7 @@ interface Props {
 class StockTickerGrid extends React.Component<Props, {}> {
     private columnDefs: any[] = [
         {
-            headerName: "Symbol", field: "synbol", enablePivot: true,
+            headerName: "Symbol", field: "symbol", enablePivot: true,
                     width: 130, filter: 'text'
         },
         {
@@ -26,7 +26,7 @@ class StockTickerGrid extends React.Component<Props, {}> {
                     width: 130
         },
         {
-            headerName: "Last Upated", field: "lastUdpate", enablePivot: true,
+            headerName: "Last Upated", field: "lastUpdate", enablePivot: true,
                     width: 130
         }
    ];
@@ -90,7 +90,7 @@ class StockTickerGrid extends React.Component<Props, {}> {
         var symbol: string = change.name;
         var stockValue:StockValue = change.newValue;
 
-        console.log("Grid onStockValueChange symbol " + symbol + " value " + JSON.stringify(stockValue))
+        // console.log("Grid onStockValueChange symbol " + symbol + " value " + JSON.stringify(stockValue))
 
         // at the end of the update below, this array will
         // have all of the items that we updated
